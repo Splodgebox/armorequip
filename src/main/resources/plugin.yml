@@ -1,0 +1,4 @@
+name: armorequip
+version: '${version}'
+main: net.splodgebox.armorequip.ArmorEquip
+api-version: '1.13'
