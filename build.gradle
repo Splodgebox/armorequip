@@ -1,9 +1,7 @@
-plugins {
-    id 'java'
-    id 'maven-publish'
-}
+apply plugin: 'java'
+apply plugin: 'maven-publish'
 
-group = 'com.github.Splodgebox'
+group = 'com.github.jitpack'
 version = '1.0.0'
 
 repositories {
@@ -49,14 +47,21 @@ processResources {
     }
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
             from components.java
         }
     }
-    repositories {
-        mavenLocal()
-    }
+}
+
+wrapper {
+    gradleVersion = "7.3.3"
+    distributionType = Wrapper.DistributionType.ALL
 }
 
