@@ -25,7 +25,7 @@ Small parts of the code were taken from the original [ArmorEquipEvent](https://g
         Player player = event.getPlayer();
         ItemStack itemStack = event.getItemStack();
 
-        player.sendMessage("You have successfully applied " + itemStack.getType());
+        player.sendMessage("You have successfully removed " + itemStack.getType());
     }
 ```
 
