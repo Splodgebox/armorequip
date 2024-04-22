@@ -16,16 +16,19 @@ public final class ArmorEquip extends JavaPlugin {
     public static void registerListeners(Plugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(new ArmorListeners(), plugin);
 
-        String serverVersion = Bukkit.getVersion();
-        if (isVersion1_13OrAbove(serverVersion)) {
+        if (isVersion130OrAbove()) {
             plugin.getServer().getPluginManager().registerEvents(new DispenserListeners(), plugin);
         }
     }
 
-    private static boolean isVersion1_13OrAbove(String version) {
-        String[] versionParts = version.split(" ")[1].split("\\.");
-        int majorVersion = Integer.parseInt(versionParts[1]);
-        return majorVersion >= 13;
+    private static boolean isVersion130OrAbove() {
+        String version = Bukkit.getBukkitVersion();
+        String[] versionParts = version.split("\\.");
+
+        int major = Integer.parseInt(versionParts[0]);
+        int minor = Integer.parseInt(versionParts[1]);
+
+        return major > 1 || (major == 1 && minor >= 30);
     }
 
 }
