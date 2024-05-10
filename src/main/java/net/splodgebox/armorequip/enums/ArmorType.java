@@ -23,7 +23,7 @@ public enum ArmorType {
         if(!ItemUtils.isValid(itemStack)) return null;
         Material type = itemStack.getType();
         String typeName = type.name();
-        if(typeName.endsWith("_HELMET") || typeName.endsWith("_SKULL") || typeName.endsWith("_HEAD") || type == Material.CARVED_PUMPKIN) return HELMET;
+        if(typeName.endsWith("_HELMET") || typeName.endsWith("_SKULL") || typeName.endsWith("_HEAD") || typeName.equalsIgnoreCase("CARVED_PUMPKIN")) return HELMET;
         else if(typeName.endsWith("_CHESTPLATE") || typeName.equals("ELYTRA")) return CHESTPLATE;
         else if(typeName.endsWith("_LEGGINGS")) return LEGGINGS;
         else if(typeName.endsWith("_BOOTS")) return BOOTS;
