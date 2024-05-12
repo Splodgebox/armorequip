@@ -108,7 +108,13 @@ public class ArmorListeners implements Listener {
         if (armorType == null) return;
 
         ItemStack armor = getArmor(player, armorType);
-        if (!ItemUtils.isValid(armor)) {
+        if (ItemUtils.isValid(armor)) {
+            ArmorEquipEvent armorEquipEvent = new ArmorEquipEvent(itemStack, player);
+            Bukkit.getServer().getPluginManager().callEvent(armorEquipEvent);
+
+            ArmorUnequipEvent armorUnequipEvent = new ArmorUnequipEvent(armor, player);
+            Bukkit.getServer().getPluginManager().callEvent(armorUnequipEvent);
+        } else {
             ArmorEquipEvent armorEquipEvent = new ArmorEquipEvent(itemStack, player);
             Bukkit.getServer().getPluginManager().callEvent(armorEquipEvent);
         }
