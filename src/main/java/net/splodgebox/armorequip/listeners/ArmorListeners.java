@@ -1,5 +1,7 @@
 package net.splodgebox.armorequip.listeners;
 
+import lombok.NonNull;
+import net.splodgebox.armorequip.ArmorEquip;
 import net.splodgebox.armorequip.enums.ArmorType;
 import net.splodgebox.armorequip.events.ArmorEquipEvent;
 import net.splodgebox.armorequip.events.ArmorUnequipEvent;
@@ -46,6 +48,8 @@ public class ArmorListeners implements Listener {
             armorEquipEvent = new ArmorEquipEvent(currentItem, player);
         } else if (event.getSlotType() == InventoryType.SlotType.ARMOR) {
             if (!ItemUtils.isValid(cursor)) return;
+            ArmorType armorType = matchArmorType(cursor);
+            if (armorType != null && armorType.getSlot() != event.getRawSlot()) return;
             armorEquipEvent = new ArmorEquipEvent(cursor, player);
         }
 
@@ -61,18 +65,23 @@ public class ArmorListeners implements Listener {
     @EventHandler
     public void onArmorUnequip(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
-        ItemStack currentItem = event.getCurrentItem();
-        ArmorUnequipEvent armorEquipEvent;
+        if (!ItemUtils.isValid(event.getCurrentItem())) return;
 
-        if (event.getSlotType() != InventoryType.SlotType.ARMOR) return;
-        if (!ItemUtils.isValid(currentItem)) return;
-        armorEquipEvent = new ArmorUnequipEvent(currentItem, (Player) event.getWhoClicked());
+        ItemStack currentItem = event.getCurrentItem().clone();
+        Player player = (Player) event.getWhoClicked();
 
-        Bukkit.getServer().getPluginManager().callEvent(armorEquipEvent);
+        Bukkit.getScheduler().runTaskLater(ArmorEquip.getInstance(), () -> {
+            ArmorUnequipEvent armorEquipEvent;
+            if (event.getSlotType() != InventoryType.SlotType.ARMOR) return;
+            if (!ItemUtils.isValid(currentItem)) return;
+            armorEquipEvent = new ArmorUnequipEvent(currentItem, player);
 
-        if (armorEquipEvent.isCancelled()) {
-            event.setCancelled(true);
-        }
+            Bukkit.getServer().getPluginManager().callEvent(armorEquipEvent);
+
+            if (armorEquipEvent.isCancelled()) {
+                event.setCancelled(true);
+            }
+        }, 10L);
     }
 
     @EventHandler
@@ -123,6 +132,10 @@ public class ArmorListeners implements Listener {
     public boolean isShiftClick(InventoryClickEvent event, ArmorType armorType) {
         Inventory inventory = event.getInventory();
         return !ItemUtils.isValid(inventory.getItem(armorType.getSlot()));
+    }
+
+    public ArmorType matchArmorType(@NonNull ItemStack itemStack) {
+        return ArmorType.matchType(itemStack);
     }
 
     public ItemStack getArmor(Player player, ArmorType armorType) {
